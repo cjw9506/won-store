@@ -16,7 +16,7 @@
 
 -   프로젝트 이름 : Won-Store(의류 store)
 -   개발 인원 : 1명
--   개발 기간 : 2023.03.21 -
+-   개발 기간 : 2023.03.29 -
 -   주요 기능 :
     -   회원 - 회원 가입(User, Admin), 회원 정보 수정, 유효성 검사 및 중복 검사
     -   상품 기능 - 상품 CRUD
@@ -83,8 +83,7 @@
 대략적인 DB 구조는 이렇다.
 
 처음 Mysql ERD설계를 해봤는데 미숙한 것 같다. 시간 내서 공부하도록 하자.
-
-[##_Image|kage@cuks5q/btr43ZwqFQj/guRrWIRtBvL7kNqRIkTqTk/img.png|CDM|1.3|{"originWidth":1648,"originHeight":1228,"style":"alignCenter","width":623,"height":464,"filename":"스크린샷 2023-03-21 오후 3.49.05.png"}_##]
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fcuks5q%2Fbtr43ZwqFQj%2FguRrWIRtBvL7kNqRIkTqTk%2Fimg.png)
 
 ---
 
