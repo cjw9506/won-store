@@ -83,7 +83,7 @@
 대략적인 DB 구조는 이렇다.
 
 처음 Mysql ERD설계를 해봤는데 미숙한 것 같다. 시간 내서 공부하도록 하자.
-![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fcuks5q%2Fbtr43ZwqFQj%2FguRrWIRtBvL7kNqRIkTqTk%2Fimg.png)
+![](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcSCWre%2Fbtr65rJDZXm%2FBaJykE70e3jk6e8H1kMkSK%2Fimg.png)
 
 ---
 
