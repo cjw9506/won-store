@@ -21,22 +21,30 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
-    private String username;
+    private String userId; //회원 아이디
 
-    private String password;
+    private String email; //회원 이메일
 
-    private String email;
+    private String username; //회원 이름
+
+    private String password; //회원 비밀번호
+
+    private String phoneNumber; //폰 번호
 
     @Embedded
-    private Address address;
+    private Address address; //회원 주소
 
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
 
     public static Member dtoToEntity(MemberDto memberDto) {
         Member member = Member.builder()
-                .username(memberDto.getUsername())
+                .userId(memberDto.getUserId())
+                .email(memberDto.getEmail())
+                .username(memberDto.getUserId())
                 .password(memberDto.getPassword())
+                .phoneNumber(memberDto.getPhoneNumber())
+                .address(new Address(memberDto.getDetailedAddress()))
                 .build();
         return member;
     }

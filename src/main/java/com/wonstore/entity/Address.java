@@ -11,9 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Address {
 
-    private String province; // 도
-    private String city; // 시
-    private String district; // 구
     private String detailedAddress; // 상세주소
 
 
