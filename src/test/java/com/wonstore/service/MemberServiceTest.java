@@ -10,6 +10,8 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -23,8 +25,8 @@ class MemberServiceTest {
     public void joinTest() { //회원가입 테스트
         Member member = Member.builder().username("jiwon").build();
         Long memberId = memberServiceImpl.join(member);
-        Member findMember = memberServiceImpl.findOne(memberId);
-        Assertions.assertEquals(findMember.getId(), memberId);
+        Optional<Member> findMember = memberServiceImpl.findOne(memberId);
+        Assertions.assertEquals(findMember.get().getId(), memberId);
     }
 
     @Test
