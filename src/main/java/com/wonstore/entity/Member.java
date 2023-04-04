@@ -1,6 +1,7 @@
 package com.wonstore.entity;
 
 import com.wonstore.dto.MemberDto;
+import com.wonstore.dto.PasswordDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,12 +42,42 @@ public class Member {
         Member member = Member.builder()
                 .userId(memberDto.getUserId())
                 .email(memberDto.getEmail())
-                .username(memberDto.getUserId())
+                .username(memberDto.getUsername())
                 .password(memberDto.getPassword())
                 .phoneNumber(memberDto.getPhoneNumber())
                 .address(new Address(memberDto.getDetailedAddress()))
                 .build();
         return member;
     }
+    public static MemberDto entityToDto(Member member) {
+        Address address = member.getAddress();
+        MemberDto dto = MemberDto.builder()
+                //.id(member.getId())
+                .userId(member.getUserId())
+                .email(member.getEmail())
+                .username(member.getUsername())
+                .password(member.getPassword())
+                .phoneNumber(member.getPhoneNumber())
+                .detailedAddress(address != null? address.getDetailedAddress() :  null)
+                .build();
+        return dto;
+    }
 
+    //현재 비밀번호 떤지기
+    public static PasswordDto passwordToDto(Member member) {
+        PasswordDto dto = PasswordDto.builder()
+                .currentPassword(member.getPassword())
+                .build();
+        return dto;
+    }
+
+    public void updateInfo(String username, String phoneNumber, Address address) {
+        this.username = username;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+    }
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
 }

@@ -1,6 +1,8 @@
 package com.wonstore.service;
 
 import com.wonstore.entity.Member;
+import com.wonstore.exception.DuplicateEmailException;
+import com.wonstore.exception.DuplicateIdException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +24,7 @@ class MemberServiceTest {
 
     @Test
     @Transactional
-    public void joinTest() { //회원가입 테스트
+    public void joinTest() throws DuplicateIdException, DuplicateEmailException { //회원가입 테스트
         Member member = Member.builder().username("jiwon").build();
         Long memberId = memberServiceImpl.join(member);
         Optional<Member> findMember = memberServiceImpl.findOne(memberId);
@@ -31,13 +33,17 @@ class MemberServiceTest {
 
     @Test
     @Transactional
-    public void DuplicateName() { //회원이름 중복 테스트
-        Member memberA = Member.builder().username("jiwon").build();
-        Member memberB = Member.builder().username("jiwon").build();
+    public void DuplicateName() throws DuplicateIdException, DuplicateEmailException { //회원이름 중복 테스트
+        Member memberA = Member.builder().userId("cjw9506").build();
+            Member memberB = Member.builder().userId("cjw9506").build();
         memberServiceImpl.join(memberA);
 
-        IllegalStateException thrown = assertThrows(IllegalStateException.class, () -> memberServiceImpl.join(memberB));
-        assertEquals("이미 존재하는 회원입니다.", thrown.getMessage());
+        try {
+            memberServiceImpl.join(memberB);
+            fail("예외가 발생해야 합니다.");
+        } catch (IllegalStateException e) {
+            org.assertj.core.api.Assertions.assertThat(e.getMessage()).isEqualTo("이미 존재하는 회원입니다.");
+        }
 
     }
 }

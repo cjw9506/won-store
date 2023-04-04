@@ -13,7 +13,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("select m from Member m")
     public List<Member> findAllName(String name);
 
-    Member findByUsername(String loginId);
+    Optional<Member> findByUsername(String loginId);
 
 
 
