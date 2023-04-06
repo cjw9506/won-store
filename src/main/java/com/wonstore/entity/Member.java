@@ -35,6 +35,7 @@ public class Member {
     @Embedded
     private Address address; //회원 주소
 
+    @Builder.Default
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
 
@@ -52,7 +53,6 @@ public class Member {
     public static MemberDto entityToDto(Member member) {
         Address address = member.getAddress();
         MemberDto dto = MemberDto.builder()
-                //.id(member.getId())
                 .userId(member.getUserId())
                 .email(member.getEmail())
                 .username(member.getUsername())
@@ -80,4 +80,5 @@ public class Member {
     public void changePassword(String password) {
         this.password = password;
     }
+
 }
