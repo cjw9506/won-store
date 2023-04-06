@@ -23,6 +23,7 @@
                         <li class="nav-item"><a class="nav-link" th:href="@{/members/{memberId}/edit(memberId=${member.id})}">회원정보수정</a></li>
                         <li class="nav-item"><a class="nav-link" href="/items/add">상품등록</a></li>
                         <li class="nav-item"><a class="nav-link" href="/items">상품관리</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/orders">주문목록</a></li>
                         <li class="nav-item">
                             <form action="/logout" method="post">
                                 <button type="submit" class="nav-link btn \btn-link">로그아웃</button>
@@ -61,7 +62,7 @@
                         <td><a th:href="@{/items/{itemId}(itemId=${item.id})}" th:text="${item.itemName}"></a></td>
                         <td th:text="${item.itemPrice}"></td>
                         <td th:text="${item.itemQuantity}"></td>
-                        <td th:text="${item.username}"></td>
+                        <td th:text="${item.writer}"></td>
                     </tr>
 
                     </tbody>
