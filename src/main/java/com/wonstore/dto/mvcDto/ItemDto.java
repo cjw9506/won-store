@@ -1,4 +1,4 @@
-package com.wonstore.dto;
+package com.wonstore.dto.mvcDto;
 
 import lombok.*;
 
@@ -13,11 +13,6 @@ public class ItemDto {
     private int itemPrice;
 
     private int itemQuantity;
-
-    //일대일로 변경해야겠다. Item <-> itemImg
-//    private ItemImg itemImg;
-//
-//    private List<ItemCategory> category;
 
     private String itemDetail;
 

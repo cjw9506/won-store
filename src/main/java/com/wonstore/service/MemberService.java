@@ -10,15 +10,21 @@ import java.util.Optional;
 
 public interface MemberService {
 
+    //생성
     Long join(Member member) throws DuplicateIdException, DuplicateEmailException;
 
-    void changePassword(Long id, String newPassword);
+    //단건 조회
+    Member findOne(Long memberId);
 
-    Optional<Member> findOne(Long memberId);
-
+    //전체 조회
     List<Member> findMembers();
 
+    //단건 조회 - 이름
     Optional<Member> findByUsername(String username);
 
+    //수정
     void updateMember(Long id, String username, String phoneNumber, Address address);
+
+    //비밀번호 변경
+    void changePassword(Long id, String newPassword);
 }

@@ -1,4 +1,4 @@
-package com.wonstore.dto;
+package com.wonstore.dto.mvcDto;
 
 import lombok.Builder;
 import lombok.Getter;

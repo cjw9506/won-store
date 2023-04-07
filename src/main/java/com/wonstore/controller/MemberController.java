@@ -1,11 +1,9 @@
 package com.wonstore.controller;
 
-import com.wonstore.dto.LoginDto;
-import com.wonstore.dto.MemberDto;
-import com.wonstore.dto.PasswordDto;
+import com.wonstore.dto.mvcDto.MemberDto;
+import com.wonstore.dto.mvcDto.PasswordDto;
 import com.wonstore.entity.Address;
 import com.wonstore.entity.Member;
-import com.wonstore.entity.SessionConst;
 import com.wonstore.exception.DuplicateEmailException;
 import com.wonstore.exception.DuplicateIdException;
 import com.wonstore.service.MemberServiceImpl;
@@ -43,7 +41,8 @@ public class MemberController {
         }
 
         try {
-            memberService.join(Member.dtoToEntity(memberDto));
+            Member member = dtoToEntity(memberDto);
+            memberService.join(member);
         } catch (DuplicateIdException e) {
             String errorMessage = e.getMessage();
             logger.error(errorMessage, e);
@@ -60,8 +59,9 @@ public class MemberController {
 
     @GetMapping("/{memberId}/edit") //인터셉터 관리
     public String edit(@PathVariable("memberId") Long memberId, Model model) {
-        Member member = memberService.findOne(memberId).get();
-        model.addAttribute("memberDto", Member.entityToDto(member));
+        Member member = memberService.findOne(memberId);
+        MemberDto memberDto = entityToDto(member);
+        model.addAttribute("memberDto", memberDto);
         log.info("memberId = {}", memberId);
         return "members/editMemberForm";
     }
@@ -81,8 +81,9 @@ public class MemberController {
 
     @GetMapping("/{memberId}/edit/password")
     public String editPassword(@PathVariable("memberId") Long memberId, Model model) {
-        Member member = memberService.findOne(memberId).get();
-        model.addAttribute("passwordDto", Member.passwordToDto(member));
+        Member member = memberService.findOne(memberId);
+        PasswordDto passwordDto = passwordToDto(member);
+        model.addAttribute("passwordDto", passwordDto);
         return "members/editPasswordForm";
 
     }
@@ -91,7 +92,7 @@ public class MemberController {
     public String updatePassword(@PathVariable("memberId") Long memberId,
                                  @ModelAttribute("passwordDto") @Validated PasswordDto passwordDto,
                                  BindingResult bindingResult) {
-        Member findMember = memberService.findOne(memberId).get();
+        Member findMember = memberService.findOne(memberId);
         if (!passwordDto.getNewPassword().equals(passwordDto.getNewPasswordConfirm())) {
             bindingResult.rejectValue(
                     "newPasswordConfirm", "error.passwordDto", "새 비밀번호와 새 비밀번호 확인이 다릅니다.");
@@ -106,5 +107,40 @@ public class MemberController {
 
         memberService.changePassword(memberId,passwordDto.getNewPassword());
         return "redirect:/";
+    }
+
+    // dto -> entity
+    private Member dtoToEntity(MemberDto memberDto) {
+        Member member = Member.builder()
+                .userId(memberDto.getUserId())
+                .email(memberDto.getEmail())
+                .username(memberDto.getUsername())
+                .password(memberDto.getPassword())
+                .phoneNumber(memberDto.getPhoneNumber())
+                .address(new Address(memberDto.getDetailedAddress()))
+                .build();
+        return member;
+    }
+
+    // entity -> dto
+    private MemberDto entityToDto(Member member) {
+        Address address = member.getAddress();
+        MemberDto dto = MemberDto.builder()
+                .userId(member.getUserId())
+                .email(member.getEmail())
+                .username(member.getUsername())
+                .password(member.getPassword())
+                .phoneNumber(member.getPhoneNumber())
+                .detailedAddress(address != null? address.getDetailedAddress() :  null)
+                .build();
+        return dto;
+    }
+
+    //현재 비밀번호 떤지기
+    private PasswordDto passwordToDto(Member member) {
+        PasswordDto dto = PasswordDto.builder()
+                .currentPassword(member.getPassword())
+                .build();
+        return dto;
     }
 }

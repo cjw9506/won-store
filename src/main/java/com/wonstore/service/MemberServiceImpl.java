@@ -1,5 +1,7 @@
 package com.wonstore.service;
 
+import com.wonstore.dto.apiDto.member.CreateMemberRequest;
+import com.wonstore.dto.apiDto.member.UpdateMemberRequest;
 import com.wonstore.entity.Address;
 import com.wonstore.entity.Member;
 import com.wonstore.exception.DuplicateEmailException;
@@ -10,9 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -22,7 +22,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
 
-    @PostConstruct
+    @PostConstruct //샘플 데이터
     public void init() {
         Member member1 = Member.builder()
                 .userId("cjw9506")
@@ -40,7 +40,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Transactional
-    @Override
+    @Override //회원가입
     public Long join(Member member) throws DuplicateIdException, DuplicateEmailException {
         List<Member> findMembers = memberRepository.findAll();
 
@@ -57,36 +57,40 @@ public class MemberServiceImpl implements MemberService {
         return member.getId();
     }
 
-    @Override
-    @Transactional
-    public void changePassword(Long id, String newPassword) {
-        Member savedMember = memberRepository.findById(id).get();
-        savedMember.changePassword(newPassword);
+    @Override //단건 조회 - id
+    public Member findOne(Long memberId) {
+        return memberRepository.findById(memberId).get();
     }
 
-
-    @Override
-    public Optional<Member> findOne(Long memberId) {
-        return memberRepository.findById(memberId);
-    }
-
-    @Override
-    public List<Member> findMembers() {
-        return memberRepository.findAll();
-    }
-
-    @Override
+    @Override // 단건 조회 - username
     public Optional<Member> findByUsername(String loginId) {
         return findMembers().stream()
                 .filter(m -> m.getUserId().equals(loginId))
                 .findFirst();
     }
 
+    @Override// 전체 조회
+    public List<Member> findMembers() {
+        return memberRepository.findAll();
+    }
+
     @Override
-    @Transactional
+    @Transactional //회원 수정
     public void updateMember(Long id, String username, String phoneNumber, Address address) {
         Member savedMember = memberRepository.findById(id).get();
         savedMember.updateInfo(username, phoneNumber, address);
+    }
+
+    @Override
+    @Transactional //비밀번호 수정
+    public void changePassword(Long id, String newPassword) {
+        Member savedMember = memberRepository.findById(id).get();
+        savedMember.changePassword(newPassword);
+    }
+
+    @Transactional //회원 삭제
+    public void deleteMember(Long id) {
+        memberRepository.deleteById(id);
     }
 
 

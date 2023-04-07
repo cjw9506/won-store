@@ -1,7 +1,6 @@
 package com.wonstore.entity;
 
-import com.wonstore.dto.ItemDto;
-import com.wonstore.dto.MemberDto;
+import com.wonstore.dto.mvcDto.ItemDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,15 +35,8 @@ public class Item {
 
     private String writer;
 
-    public static ItemDto entityToDto(Item item) {
-        ItemDto dto = ItemDto.builder()
-                .itemName(item.getItemName())
-                .itemPrice(item.getItemPrice())
-                .itemQuantity(item.getItemQuantity())
-                .itemDetail(item.getItemDetail())
-                .username(item.getWriter())
-                .build();
-        return dto;
+    public void setWriter(Member member) {
+        this.writer = writer;
     }
 
     public void update(String itemName, int itemPrice, int itemQuantity, String itemDetail) {

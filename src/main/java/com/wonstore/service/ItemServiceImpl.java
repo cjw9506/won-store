@@ -17,13 +17,13 @@ import java.util.Optional;
 public  class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
-    private final MemberServiceImpl memberService;
+    private final MemberService memberService;
 
-    @PostConstruct
+    @PostConstruct //아이템 샘플 데이터
     public void init() {
 
-        Member member1 = memberService.findOne(1L).get();
-        Member member2 = memberService.findOne(2L).get();
+        Member member1 = memberService.findOne(1L);
+        Member member2 = memberService.findOne(2L);
 
         Item item1 = Item.builder()
                 .itemName("아이템1")
@@ -47,7 +47,7 @@ public  class ItemServiceImpl implements ItemService {
     }
 
     @Transactional
-    @Override
+    @Override //아이템 저장
     public Long saveItem(Item item) {
         itemRepository.save(item);
         return item.getId();
@@ -55,20 +55,26 @@ public  class ItemServiceImpl implements ItemService {
 
 
     @Transactional
-    @Override
+    @Override //아이템 수정
     public void updateItem(Long id, String name, int price, int quantity, String detail) {
         Item findItem = itemRepository.findById(id).get();
         findItem.update(name, price, quantity, detail);
     }
 
-    @Override
+    @Override //전체 조회
     public List<Item> findItems() {
         return itemRepository.findAll();
     }
 
+    @Override //단건 조회
+    public Item findOne(Long itemId) {
+        return itemRepository.findById(itemId).get();
+    }
+
+    @Transactional
     @Override
-    public Optional<Item> findOne(Long itemId) {
-        return itemRepository.findById(itemId);
+    public void delete(Long id) {
+        itemRepository.deleteById(id);
     }
 
 

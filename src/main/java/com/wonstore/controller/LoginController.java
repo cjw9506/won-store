@@ -1,17 +1,12 @@
 package com.wonstore.controller;
 
-import com.wonstore.dto.LoginDto;
+import com.wonstore.dto.mvcDto.LoginDto;
 import com.wonstore.entity.Member;
 import com.wonstore.entity.SessionConst;
 import com.wonstore.exception.LoginFailedException;
-import com.wonstore.service.LoginService;
 import com.wonstore.service.LoginServiceImpl;
 import com.wonstore.service.MemberServiceImpl;
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.io.IOException;
 import java.util.Optional;
 
 
@@ -72,8 +66,6 @@ public class LoginController {
             return "login/loginForm";
         }
     }
-
-
 
     @PostMapping("/logout")
     public String logout(HttpServletRequest request) {

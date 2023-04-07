@@ -27,8 +27,8 @@ class MemberServiceTest {
     public void joinTest() throws DuplicateIdException, DuplicateEmailException { //회원가입 테스트
         Member member = Member.builder().username("jiwon").build();
         Long memberId = memberServiceImpl.join(member);
-        Optional<Member> findMember = memberServiceImpl.findOne(memberId);
-        Assertions.assertEquals(findMember.get().getId(), memberId);
+        Member findMember = memberServiceImpl.findOne(memberId);
+        Assertions.assertEquals(findMember.getId(), memberId);
     }
 
     @Test
@@ -46,4 +46,5 @@ class MemberServiceTest {
         }
 
     }
+
 }
