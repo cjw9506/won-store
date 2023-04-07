@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Bare - Start Bootstrap Template</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="/css/styles.css" rel="stylesheet" />
+</head>
+    <body>
+        <!-- Responsive navbar-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="/">Won-Store</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="/">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/items/add">상품등록</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/items">상품관리</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/orders">주문목록</a></li>
+                        <li class="nav-item">
+                            <form action="/logout" method="post">
+                                <button type="submit" class="nav-link btn btn-link">로그아웃</button>
+                            </form>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="#">Action</a></li>
+                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                <li><hr class="dropdown-divider" /></li>
+                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Page content-->
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-4">
+                    <div class="py-5 text-center">
+                        <h2>주문 상세</h2>
+                    </div>
+                    <form action="" th:action th:object="${orderDto}" method="post">
+                        <div class="form-group mb-3">
+                            <label for="memberName">회원 이름 *</label>
+                            <input type="text" id="memberName" th:field="${orderDto.memberName}" class="form-control" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="memberEmail">회원 이메일 *</label>
+                            <input type="text" id="memberEmail" th:field="${orderDto.memberEmail}" class="form-control" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="memberPhoneNumber">회원 연락처 *</label>
+                            <input type="text" id="memberPhoneNumber" th:field="${orderDto.memberPhoneNumber}" class="form-control" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address">회원 주소 *</label>
+                            <input type="text" id="address" th:field="${orderDto.address}" class="form-control" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="itemName">주문할 상품 *</label>
+                            <input type="text" id="itemName" th:field="${orderDto.itemName}" class="form-control" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="itemPrice">상품 가격 *</label>
+                            <input type="number" id="itemPrice" th:field="${orderDto.itemPrice}" class="form-control" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="itemQuantity">상품 수량 *</label>
+                            <input type="number" id="itemQuantity" th:field="${orderDto.itemQuantity}" class="form-control" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="count">주문 수량 *</label>
+                            <input type="number" id="count" th:field="${orderDto.count}" class="form-control">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="totalPrice">총 가격 *</label>
+                            <input type="number" id="totalPrice" th:field="${orderDto.count}" class="form-control" oninput="calculateTotalPrice()">
+                        </div>
+
+                        <script>
+                            document.getElementById("count").addEventListener("input", function() {
+                                var count = document.getElementById("count").value;
+                                var price = document.getElementById("itemPrice").value;
+                                document.getElementById("totalPrice").value = count * price;
+                            });
+                        </script>
+
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">주문하기</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+            <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="/js/scripts.js"></script>
+    </body>
+</html>
+
+
+
