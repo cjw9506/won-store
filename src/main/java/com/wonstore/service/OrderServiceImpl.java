@@ -2,6 +2,7 @@ package com.wonstore.service;
 
 import com.wonstore.entity.*;
 import com.wonstore.repository.OrderRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,20 @@ public class OrderServiceImpl implements OrderService{
     private final MemberServiceImpl memberService;
     private final ItemServiceImpl itemService;
     private final OrderRepository orderRepository;
+
+    @PostConstruct //샘플 데이터
+    public void init() {
+        Member member = memberService.findOne(1L);
+        Item item = itemService.findOne(1L);
+        Delivery delivery = Delivery.builder()
+                .address(member.getAddress())
+                .status(DeliveryStatus.READY)
+                .build();
+        OrderItem orderItem = OrderItem.createOrderItem(item, item.getItemPrice(),2);
+
+        Order order = Order.createOrder(member, delivery, orderItem);
+        orderRepository.save(order);
+    }
 
     @Override
     @Transactional //주문

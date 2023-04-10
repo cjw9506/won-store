@@ -24,7 +24,7 @@ public class MemberApiController {
     private final MemberServiceImpl memberService;
 
     @PostMapping("/api/members") //회원가입
-    public ResponseEntity<CreateMemberResponse> saveMemberV2(@RequestBody CreateMemberRequest request) throws DuplicateIdException, DuplicateEmailException {
+    public ResponseEntity<CreateMemberResponse> saveMember(@RequestBody CreateMemberRequest request) throws DuplicateIdException, DuplicateEmailException {
 
         Member member = dtoToEntity(request);
         Long id = memberService.join(member);
@@ -40,8 +40,8 @@ public class MemberApiController {
 
     }
 
-    @PutMapping("api/members/{id}") //회원 정보 수정 -> 이름, 주소, 연락처 만 수정가능
-    public UpdateMemberResponse updateMemberV2(@PathVariable("id") Long id,
+    @PutMapping("/api/members/{id}") //회원 정보 수정 -> 이름, 주소, 연락처 만 수정가능
+    public UpdateMemberResponse updateMember(@PathVariable("id") Long id,
                                                @RequestBody UpdateMemberRequest request) {
 
 
@@ -58,7 +58,7 @@ public class MemberApiController {
     }
 
     @GetMapping("/api/members") //전체 회원 조회
-    public Result membersV2() {
+    public Result members() {
         List<Member> findMembers = memberService.findMembers();
         List<MemberListDto> collect = findMembers.stream()
                 .map(m -> new MemberListDto(m.getUserId()))
@@ -68,7 +68,7 @@ public class MemberApiController {
     }
 
     @GetMapping("/api/members/{memberId}") //단건 조회
-    public Result memberV2(@PathVariable("memberId") Long memberId) {
+    public Result member(@PathVariable("memberId") Long memberId) {
         Member findMember = memberService.findOne(memberId);
 
         return new Result(findMember);
