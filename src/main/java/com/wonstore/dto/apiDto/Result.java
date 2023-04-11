@@ -8,4 +8,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class Result<T> {
     private T data;
+
 }
