@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,8 @@ public class Cart {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    private LocalDateTime createdDate;
+
     @Builder.Default
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     private List<CartItem> cartItems = new ArrayList<>();
@@ -35,32 +38,18 @@ public class Cart {
         cartItem.createCart(this);
     }
 
+    public void removeCartItem(CartItem cartItem) {
+        cartItems.remove(cartItem);
+        cartItem.removeCart();
+    }
 
-    public static Cart createCart(Member member, CartItem... cartItems) {
+    public static Cart createCart(Member member) {
         Cart cart = Cart.builder()
                 .member(member)
+                .createdDate(LocalDateTime.now())
                 .build();
 
-        for (CartItem cartItem : cartItems) {//장바구니 아이템 추가
-            cart.addCartItem(cartItem);
-        }
-
         return cart;
-
     }
-
-    public int calculateTotalPrice() {
-        int totalPrice = 0;
-
-        for (CartItem cartItem : cartItems) {
-            totalPrice += cartItem.getCount() * cartItem.getItem().getItemPrice();
-        }
-        return totalPrice;
-    }
-
-
-
-
-
 
 }

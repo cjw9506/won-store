@@ -36,7 +36,6 @@ public class CartServiceImpl implements CartService{
 
     @Transactional
     @Override //장바구니에 아이템 추가
-
     public void addCartItem(Long cartId, Long itemId, int count) {
 
         Item item = itemService.findOne(itemId);
@@ -45,7 +44,24 @@ public class CartServiceImpl implements CartService{
         CartItem cartItem = CartItem.createCartItem(item, count);
         cart.addCartItem(cartItem);
 
-        log.info("{}님이 장바구니에 {}상품을 {}개 담았습니다.", cart.getMember().getUserId(), cartItem.getItem().getItemName(), cartItem.getCount());
+        log.info("{}님이 장바구니의 {}상품을 {}개 담았습니다.", cart.getMember().getUserId(), cartItem.getItem().getItemName(), cartItem.getCount());
+    }
+
+    @Transactional
+    public void updateCartItemCount(Long cartId, int cartItemId, int count) {
+        Cart cart = cartRepository.findById(cartId).get();
+        CartItem cartItem = cart.getCartItems().get(cartItemId - 1);
+        cartItem.updateCount(count);
+        log.info("{}님의 장바구니의 {}상품의 수량이 {}개로 변경되었습니다.", cart.getMember().getUserId(), cartItem.getItem().getItemName(), count);
+    }
+
+    @Transactional
+    public void removeCartItem(Long cartId, int cartItemId) {
+        Cart cart = cartRepository.findById(cartId).get();
+        CartItem cartItem = cart.getCartItems().get(cartItemId-1);
+        log.info("{}님의 장바구니에서 {} 상품이 삭제되었습니다.", cart.getMember().getUserId(), cartItem.getItem().getItemName());
+        cart.removeCartItem(cartItem);
+
     }
     // 장바구니 아이템 하나씩 지우기 만들기!
 //    @Transactional

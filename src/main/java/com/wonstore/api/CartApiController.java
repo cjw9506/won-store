@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,12 +26,28 @@ public class CartApiController {
     public ResponseEntity<CartResponse> createCart(@RequestBody CartRequest request) {
         Long id = cartService.createCart(request.getMemberId());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CartResponse(id));
+        return ResponseEntity.created(URI.create("/api/cart/" + id)).body(new CartResponse(id));
     }
 
     @PostMapping("/api/cart/{cartId}") //카트에 cartItem 추가
     public CartResponse addCartItem(@PathVariable("cartId") Long cartId, @RequestBody CartAddRequest request) {
         cartService.addCartItem(cartId, request.getItemId(), request.getCount());
+
+        return new CartResponse(cartId);
+    }
+
+    @PutMapping("api/cart/{cartId}/items/{itemId}")
+    public CartResponse updateCartItemCount(@PathVariable("cartId") Long cartId,
+                                            @PathVariable("itemId") int itemId ,
+                                            @RequestBody CartUpdateRequest request) {
+        cartService.updateCartItemCount(cartId, itemId, request.getCount());
+
+        return new CartResponse(cartId);
+    }
+
+    @DeleteMapping("/api/cart/{cartId}/items/{itemId}")
+    public CartResponse removeCartItem(@PathVariable("cartId") Long cartId, @PathVariable("itemId") int cartItemId) {
+        cartService.removeCartItem(cartId, cartItemId);
 
         return new CartResponse(cartId);
     }
@@ -44,7 +61,7 @@ public class CartApiController {
 //        return new CartResponse(cartId);
 //    }
 
-    @GetMapping("/api/cart")//전체 조회
+    @GetMapping("/api/carts")//전체 조회
     public Result findCarts() {
         List<Cart> allCart = cartService.findAllCart();
         List<CartList> collect = allCart.stream().map(c -> {

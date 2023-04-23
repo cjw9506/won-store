@@ -40,5 +40,13 @@ public class CartItem {
     public void createCart(Cart cart) {
         this.cart = cart;
     }
+
+    public void removeCart() {
+        this.cart = null;
+    }
+
+    public void updateCount(int count) {
+        this.count = count;
+    }
 }
 
