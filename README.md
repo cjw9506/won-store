@@ -94,19 +94,12 @@
 
 [https://documenter.getpostman.com/view/13712893/2s93Y5Qfmp](https://documenter.getpostman.com/view/13712893/2s93Y5Qfmp)
 
- [Won-Store API
 
 쇼핑몰 프로젝트 API 명세
-
-documenter.getpostman.com](https://documenter.getpostman.com/view/13712893/2s93Y5Qfmp)
-
----
-
-### **5\. github**
-
-**[https://github.com/cjw9506/won-store](https://github.com/cjw9506/won-store)**
+(https://documenter.getpostman.com/view/13712893/2s93Y5Qfmp)
 
 ---
+
 
 ### **5\. 회고**
 
