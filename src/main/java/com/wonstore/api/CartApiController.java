@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -24,19 +26,19 @@ public class CartApiController {
 
     @PostMapping("/api/cart/new") //카트 생성
     public ResponseEntity<CartResponse> createCart(@RequestBody CartRequest request) {
-        Long id = cartService.createCart(request.getMemberId());
+        Long cartId = cartService.createCart(request.getMemberId());
 
-        return ResponseEntity.created(URI.create("/api/cart/" + id)).body(new CartResponse(id));
+        return ResponseEntity.created(URI.create("/api/cart/" + cartId)).body(new CartResponse(cartId));
     }
 
     @PostMapping("/api/cart/{cartId}") //카트에 cartItem 추가
-    public CartResponse addCartItem(@PathVariable("cartId") Long cartId, @RequestBody CartAddRequest request) {
+    public ResponseEntity<CartResponse> addCartItem(@PathVariable("cartId") Long cartId, @RequestBody CartAddRequest request) {
         cartService.addCartItem(cartId, request.getItemId(), request.getCount());
 
-        return new CartResponse(cartId);
+        return ResponseEntity.created(URI.create("/api/cart/item/" + cartId)).body(new CartResponse(cartId));
     }
 
-    @PutMapping("api/cart/{cartId}/items/{itemId}")
+    @PutMapping("api/cart/{cartId}/items/{itemId}") //카트의 cartItem 수량 변경
     public CartResponse updateCartItemCount(@PathVariable("cartId") Long cartId,
                                             @PathVariable("itemId") int itemId ,
                                             @RequestBody CartUpdateRequest request) {
@@ -46,10 +48,13 @@ public class CartApiController {
     }
 
     @DeleteMapping("/api/cart/{cartId}/items/{itemId}")
-    public CartResponse removeCartItem(@PathVariable("cartId") Long cartId, @PathVariable("itemId") int cartItemId) {
+    public ResponseEntity<Map<String, String>> removeCartItem(@PathVariable("cartId") Long cartId, @PathVariable("itemId") int cartItemId) {
         cartService.removeCartItem(cartId, cartItemId);
 
-        return new CartResponse(cartId);
+        Map<String, String> response = new HashMap<>();
+        response.put("message","장바구니의 " + cartItemId + "번 상품이 삭제되었습니다.");
+
+        return ResponseEntity.ok(response);
     }
 
 //    @PutMapping("/api/cart/{cartId}")
@@ -61,7 +66,7 @@ public class CartApiController {
 //        return new CartResponse(cartId);
 //    }
 
-    @GetMapping("/api/carts")//전체 조회
+    @GetMapping("/api/cart")//전체 조회
     public Result findCarts() {
         List<Cart> allCart = cartService.findAllCart();
         List<CartList> collect = allCart.stream().map(c -> {

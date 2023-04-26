@@ -13,4 +13,8 @@ public interface CartService {
     Cart findCart(Long cartId);
 
     List<Cart> findAllCart();
+
+    void updateCartItemCount(Long cartId, int cartItemId, int count);
+
+    void removeCartItem(Long cartId, int cartItemId);
 }

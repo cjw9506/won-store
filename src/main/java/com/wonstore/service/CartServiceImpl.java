@@ -48,6 +48,7 @@ public class CartServiceImpl implements CartService{
     }
 
     @Transactional
+    @Override
     public void updateCartItemCount(Long cartId, int cartItemId, int count) {
         Cart cart = cartRepository.findById(cartId).get();
         CartItem cartItem = cart.getCartItems().get(cartItemId - 1);
@@ -56,6 +57,7 @@ public class CartServiceImpl implements CartService{
     }
 
     @Transactional
+    @Override
     public void removeCartItem(Long cartId, int cartItemId) {
         Cart cart = cartRepository.findById(cartId).get();
         CartItem cartItem = cart.getCartItems().get(cartItemId-1);
