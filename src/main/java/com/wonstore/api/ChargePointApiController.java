@@ -51,10 +51,10 @@ public class ChargePointApiController { //충전내역 조회 추가할 것
         return new Result(collect);
     }
 
-    @GetMapping("/api/charge/{id}")
-    public ChargeDto charge(@PathVariable("id") Long id) {
-        ChargePoint charge = chargePointService.findOne(id);
-        ChargeDto chargeDto = new ChargeDto(id, charge.getMember().getId(), charge.getAmount());
+    @GetMapping("/api/charge/{chargeId}")
+    public ChargeDto charge(@PathVariable("chargeId") Long chargeId) {
+        ChargePoint charge = chargePointService.findOne(chargeId);
+        ChargeDto chargeDto = new ChargeDto(chargeId, charge.getMember().getId(), charge.getAmount());
         return chargeDto;
     }
 
