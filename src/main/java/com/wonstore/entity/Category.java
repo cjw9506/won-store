@@ -38,7 +38,7 @@ public class Category {
 
     public void removeChildCategory(Category child) {
         this.child.remove(child);
-        child.setParent(this);
+        child.setParent(null);
     }
 
 
@@ -49,6 +49,7 @@ public class Category {
     public void updateParent(String name) {
         this.name = name;
     }
+
     public void updateChild(String name, Long parentId) {
         this.name = name;
         this.parent = parent;

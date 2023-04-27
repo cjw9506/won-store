@@ -7,15 +7,19 @@ import com.wonstore.dto.apiDto.member.MemberDto;
 import com.wonstore.entity.Category;
 import com.wonstore.service.CategoryServiceImpl;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
+@Slf4j
 public class CategoryApiController {
 
     private final CategoryServiceImpl categoryService;
@@ -26,7 +30,10 @@ public class CategoryApiController {
                 .name(request.getName())
                 .build();
         Long id = categoryService.addCategory(category);
-        return ResponseEntity.created(URI.create("/api/category/parent" + id)).body(new CategoryResponse(id));
+
+        log.info("상위 카테고리 {} (이/가) 생성되었습니다.", category.getName());
+
+        return ResponseEntity.created(URI.create("/api/category/parent/" + id)).body(new CategoryResponse(id));
     }
 
     @PostMapping("/api/category/child") //자식 카테고리 생성
@@ -38,32 +45,40 @@ public class CategoryApiController {
         parent.addChildCategory(child);
         Long id = categoryService.addCategory(parent);
 
-        return ResponseEntity.created(URI.create("/api/category/child" + id)).body(new CategoryResponse(id));
+        log.info("상위 카테고리 {}의 하위 카테고리 {}(이/가) 생성되었습니다.", parent.getName(), child.getName());
+
+        return ResponseEntity.created(URI.create("/api/category/child/" + id)).body(new CategoryResponse(id));
     }
 
-    @PutMapping("/api/category/parent/{id}") //부모 카테고리 수정
-    public CategoryResponse updateParentCategory(@PathVariable("id") Long id,
+    @PutMapping("/api/category/parent/{categoryId}") //부모 카테고리 수정
+    public CategoryResponse updateParentCategory(@PathVariable("categoryId") Long categoryId,
                                                  @RequestBody CategoryRequest request) {
 
-        Category category = categoryService.findOne(id);
-        System.out.println("category.getName() = " + category.getName());
-        categoryService.updateParentCategory(id, request.getName());
-        System.out.println("category.getName() = " + category.getName());
-        return new CategoryResponse(id);
+        Category category = categoryService.findOne(categoryId);
+        String currentCategoryName = category.getName();
+        categoryService.updateParentCategory(categoryId, request.getName());
+
+        log.info("상위 카테고리 {}가 {}로 수정되었습니다.", currentCategoryName, request.getName());
+
+        return new CategoryResponse(categoryId);
     }
 
-    @PutMapping("/api/category/child/{id}") //자식 카테고리 수정
-    public CategoryResponse updateChildCategory(@PathVariable("id") Long id,
+    //흐음 나중에 다시 살펴보자
+    @PutMapping("/api/category/child/{childId}") //자식 카테고리 수정
+    public CategoryResponse updateChildCategory(@PathVariable("childId") Long childId,
                                                 @RequestBody UpdateChildRequest request) {
-        Category parent = categoryService.findOne(request.getParentId());
-        Category child = categoryService.findOne(id);
-        parent.removeChildCategory(child);
+        Category child = categoryService.findOne(childId); //자식 카테고리 조회
+        Category parent = child.getParent(); //부모 카테고리 조회
+        parent.removeChildCategory(child); //부모 카테고리에서 자식 카테고리 제거
 
-        Category newParent = categoryService.findOne(request.getNewParentId());
-        categoryService.updateChildCategory(request.getNewParentId(), id, request.getName());
-        Category newChild = categoryService.findOne(id);
-        newParent.addChildCategory(newChild);
-        return new CategoryResponse(id);
+        Category newParent = categoryService.findOne(request.getNewParentId()); //새로운 부모 카테고리 조회
+        categoryService.updateChildCategory(request.getNewParentId(), child, request.getName());
+        newParent.addChildCategory(child);
+        categoryService.addCategory(newParent);
+
+        log.info("상위 카테고리 {}의 하위카테고리 {}(이/가) 상위카테고리 {}의 하위카테고리 {}로 변경되었습니다.", parent.getName(), child.getName(), newParent.getName(), request.getName());
+
+        return new CategoryResponse(childId);
     }
 
     @GetMapping("/api/categories") //전체 조회
@@ -100,8 +115,13 @@ public class CategoryApiController {
 
     }
 
-    @DeleteMapping("/api/category/{id}") //카테고리 삭제
-    public void deleteCategory(@PathVariable("id") Long id) {
-        categoryService.delete(id);
+    @DeleteMapping("/api/category/{categoryId}") //카테고리 삭제
+    public ResponseEntity<Map<String, String>> deleteCategory(@PathVariable("categoryId") Long categoryId) {
+        categoryService.delete(categoryId);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message","카테고리가 삭제되었습니다.");
+
+        return ResponseEntity.ok(response);
     }
 }
