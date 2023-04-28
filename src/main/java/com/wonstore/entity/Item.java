@@ -1,12 +1,13 @@
 package com.wonstore.entity;
 
-import com.wonstore.dto.mvcDto.ItemDto;
+import com.wonstore.exception.NotEnoughException;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,13 +31,35 @@ public class Item {
 
     private String itemDetail;
 
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
+    private List<CategoryItem> categoryItems = new ArrayList<>();
+
     @OneToMany(mappedBy = "item")
     private List<OrderItem> orderItems = new ArrayList<>();
 
-    private String writer;
+    private Long memberId;
 
-    public void setWriter(Member member) {
-        this.writer = writer;
+    @OneToMany(mappedBy = "item")
+    private List<Review> reviews = new ArrayList<>();
+
+    public static Item createItem(String itemName, int price, int quantity, String itemDetail, Long memberId, CategoryItem... categoryItems) {
+        Item item = Item.builder()
+                .itemName(itemName)
+                .itemPrice(price)
+                .itemQuantity(quantity)
+                .itemDetail(itemDetail)
+                .categoryItems(new ArrayList<>())
+                .memberId(memberId)
+                .build();
+        for (CategoryItem categoryItem : categoryItems) {
+            item.addCategoryItem(categoryItem);
+        }
+        return item;
+    }
+
+    public void addCategoryItem(CategoryItem categoryItem) {
+        categoryItems.add(categoryItem);
+        categoryItem.createItem(this);
     }
 
     public void update(String itemName, int itemPrice, int itemQuantity, String itemDetail) {
@@ -47,7 +70,7 @@ public class Item {
     }
 
     public void addStock(int quantity) {
-        this.itemQuantity = itemQuantity;
+        this.itemQuantity += quantity;
     }
 
     public void removeStock(int quantity) {

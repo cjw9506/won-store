@@ -17,8 +17,8 @@ public class ItemDto {
     private int itemPrice;
     private int itemQuantity;
     private String itemDetail;
-    private String itemCategory;
-    private String writer;
+    //private String itemCategory;
+    private Long memberId;
     private List<String> reviews;
     //private List<Review> reviews;
 }

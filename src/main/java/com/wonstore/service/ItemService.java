@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface ItemService {
 
     //저장
-    Long saveItem(Item item) throws IOException;
+    Long saveItem(String itemName, int itemPrice, int itemQuantity, String itemDetail, Long memberId, Long categoryId);
 
     //전체 조회
     List<Item> findItems();

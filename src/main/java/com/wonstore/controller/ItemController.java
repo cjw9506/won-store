@@ -31,10 +31,10 @@ public class ItemController {
 
         HttpSession session = request.getSession();
         Member loginMember = (Member) session.getAttribute("loginMember");
-        String userId = loginMember.getUserId();
+        Long memberId = loginMember.getId();
 
-        Item item = dtoToEntity(itemDto, userId);
-        itemService.saveItem(item);
+        Item item = dtoToEntity(itemDto, memberId);
+        //itemService.saveItem(item);
         return "redirect:/items";
     }
 
@@ -91,19 +91,19 @@ public class ItemController {
                 .itemPrice(item.getItemPrice())
                 .itemQuantity(item.getItemQuantity())
                 .itemDetail(item.getItemDetail())
-                .username(item.getWriter())
+                .memberId(item.getMemberId())
                 .build();
         return dto;
     }
 
     // dto -> entity
-    private Item dtoToEntity(ItemDto itemDto, String userId) {
+    private Item dtoToEntity(ItemDto itemDto, Long memberId) {
         Item item = Item.builder()
                 .itemName(itemDto.getItemName())
                 .itemPrice(itemDto.getItemPrice())
                 .itemQuantity(itemDto.getItemQuantity())
                 .itemDetail(itemDto.getItemDetail())
-                .writer(userId)
+                .memberId(memberId)
                 .build();
         return item;
     }

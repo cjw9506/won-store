@@ -7,5 +7,5 @@ import lombok.Setter;
 @Getter @Setter
 @AllArgsConstructor
 public class ItemResponse {
-    private Long id;
+    private Long itemId;
 }

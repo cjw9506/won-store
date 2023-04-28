@@ -16,7 +16,7 @@ public class ItemDto {
 
     private String itemDetail;
 
-    private String username;
+    private Long memberId;
 
 
 }

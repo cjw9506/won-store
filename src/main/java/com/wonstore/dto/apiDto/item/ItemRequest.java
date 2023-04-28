@@ -14,5 +14,6 @@ public class ItemRequest {
     private int itemPrice;
     private int itemQuantity;
     private String itemDetail;
-    private String writer;
+    private Long memberId;
+    private Long categoryId;
 }
