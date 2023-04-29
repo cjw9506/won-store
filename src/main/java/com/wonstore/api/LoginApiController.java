@@ -13,11 +13,11 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -27,9 +27,9 @@ public class LoginApiController {
 
     private final MemberServiceImpl memberService;
     private final LoginServiceImpl loginService;
-    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoginApiController.class);
 
-    @PostMapping("/api/login")
+    @PostMapping("/api/login") //로그인
     public LoginResponse login(@RequestBody LoginRequest request,
                                HttpSession session) throws LoginFailedException {
 
@@ -49,11 +49,13 @@ public class LoginApiController {
         return new LoginResponse(true, "로그인에 성공하였습니다.");
     }
 
-    @PostMapping("/api/logout")
-    public void logout(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
+    @GetMapping("/api/logout") //로그아웃
+    public ResponseEntity<Map<String, String>> logout(HttpServletRequest request) {
+        loginService.logout(request);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "로그아웃되었습니다.");
+
+        return ResponseEntity.ok(response);
     }
 }

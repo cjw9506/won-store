@@ -6,12 +6,13 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@ControllerAdvice
-public class LoginExceptionHandler {
+//@ControllerAdvice
+//public class LoginExceptionHandler {
+//
+//    @ExceptionHandler(LoginFailedException.class)
+//    @ResponseBody
+//    public LoginResponse handleLoginFailedException(LoginFailedException e) {
+//        return new LoginResponse(false, e.getMessage());
+//    }
+//}
 
-    @ExceptionHandler(LoginFailedException.class)
-    @ResponseBody
-    public LoginResponse handleLoginFailedException(LoginFailedException e) {
-        return new LoginResponse(false, e.getMessage());
-    }
-}
