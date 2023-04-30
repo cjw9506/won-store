@@ -42,7 +42,8 @@ public class MemberController {
 
         try {
             Member member = dtoToEntity(memberDto);
-            memberService.join(member);
+            memberService.join(member.getUserId(), member.getEmail(), member.getUsername(),
+                    member.getPassword(), member.getPhoneNumber(), member.getAddress().getDetailedAddress());
         } catch (DuplicateIdException e) {
             String errorMessage = e.getMessage();
             logger.error(errorMessage, e);
@@ -105,7 +106,7 @@ public class MemberController {
             return "members/editPasswordForm";
         }
 
-        memberService.changePassword(memberId,passwordDto.getNewPassword());
+        //memberService.changePassword(memberId,passwordDto.getNewPassword());
         return "redirect:/";
     }
 
