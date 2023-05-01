@@ -4,6 +4,7 @@ import com.wonstore.dto.mvcDto.OrderDto;
 import com.wonstore.entity.Item;
 import com.wonstore.entity.Member;
 import com.wonstore.entity.Order;
+import com.wonstore.exception.NotEnoughException;
 import com.wonstore.service.ItemServiceImpl;
 import com.wonstore.service.MemberServiceImpl;
 import com.wonstore.service.OrderServiceImpl;
@@ -54,8 +55,9 @@ public class OrderController {
     @PostMapping("/form")
     public String order(@RequestParam Long itemId,
                         @RequestParam int count,
+                        int totalPrice,
                         HttpSession session
-                        ) {
+                        ) throws NotEnoughException {
 
 
         Member member = (Member) session.getAttribute("loginMember");

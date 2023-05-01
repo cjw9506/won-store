@@ -10,7 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -19,28 +22,18 @@ public class OrderApiController {
 
     private final OrderServiceImpl orderService;
 
-    @PostMapping("/api/orders") //주문하기
+    @PostMapping("/api/orders/new") //주문하기
     public ResponseEntity<OrderResponse> saveOrder(@RequestBody OrderRequest request) throws NotEnoughException {
         Long id = orderService.order(request.getMemberId(), request.getItemId(), request.getCount());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(new OrderResponse(id));
+        return ResponseEntity.created(URI.create("/api/orders/" + id)).body(new OrderResponse(id));
     }
 
-    @DeleteMapping("/api/orders/{id}") //주문취소
-    public void cancelOrder(@PathVariable("id") Long id) {
-        orderService.cancelOrder(id);
+    @PostMapping("/api/orders-cart/new")
+    public ResponseEntity<OrderResponse> saveCartOrder(@RequestBody OrderCartRequest request) throws NotEnoughException{
+        Long id = orderService.cartOrder(request.getCartId());
+        return ResponseEntity.created(URI.create("/api/orders-cart/" + id)).body(new OrderResponse(id));
     }
-
-//    @GetMapping("/api/orders") //전체 조회 -- 쿼리 두개
-//    public List<OrderDto> ordersV2() {
-//
-//        List<Order> orders = orderService.orderList();
-//        List<OrderDto> result = orders.stream()
-//                .map(o -> new OrderDto(o))
-//                .collect(Collectors.toList());
-//
-//        return result;
-//    }
 
     @GetMapping("/api/orders") //전체 조회 -- 쿼리 하나 -- 페치조인 최적화 조회
     public Result orders() {
@@ -51,11 +44,22 @@ public class OrderApiController {
         return new Result(collect);
     }
 
-    @GetMapping("/api/orders/{id}") //단건 조회
-    public Result findOneOrder(@PathVariable("id") Long id) {
-        Order findOne = orderService.findOneById(id);
-        return new Result(findOne);
+    @GetMapping("/api/orders/{orderId}") //단건 조회
+    public OrderDto findOneOrder(@PathVariable("orderId") Long orderId) {
+        Order findOne = orderService.findOneById(orderId);
+        OrderDto orderDto = new OrderDto(orderId,  findOne.getMember().getId(),
+                findOne.getOrderItems().get(0).getItem().getId(), findOne.getOrderItems().get(0).getCount());
+        return orderDto;
     }
 
+    @DeleteMapping("/api/orders/{orderId}") //주문취소
+    public ResponseEntity<Map<String, String>> cancelOrder(@PathVariable("orderId") Long orderId) {
+        orderService.cancelOrder(orderId);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "주문번호 " + orderId + "번이 주문취소되었습니다.");
+
+        return ResponseEntity.ok(response);
+    }
 
 }

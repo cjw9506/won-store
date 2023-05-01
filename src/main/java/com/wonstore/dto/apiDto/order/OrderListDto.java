@@ -8,14 +8,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter @Setter
 public class OrderListDto {
-    private String id;
-    private List<OrderItem> orderItems;
+    private Long id;
+    private String userId;
+    private List<String> itemNames;
 
     public OrderListDto(Order order) {
-        id = order.getMember().getUserId();
-        orderItems = order.getOrderItems();
+        id = order.getId();
+        userId = order.getMember().getUserId();
+        itemNames = order.getOrderItems().stream()
+                .map(orderItem -> orderItem.getItem().getItemName())
+                .collect(Collectors.toList());
     }
 }
