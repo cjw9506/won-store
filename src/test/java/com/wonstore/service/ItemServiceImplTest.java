@@ -15,7 +15,7 @@ class ItemServiceImplTest {
         Item item = Item.builder().itemName("test Item").build();
 
 
-        Item findItem = itemService.findOne(item.getId()).get();
+        Item findItem = itemService.findOne(item.getId());
 
         org.assertj.core.api.Assertions.assertThat(findItem.getItemName()).isEqualTo(item.getItemName());
 
@@ -23,7 +23,7 @@ class ItemServiceImplTest {
     }
     @Test
     public void test2() {
-        Item item = itemService.findOne(1L).get();
+        Item item = itemService.findOne(1L);
 
         int itemPrice = item.getItemPrice();
         System.out.println(itemPrice);
