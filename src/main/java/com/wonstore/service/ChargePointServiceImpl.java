@@ -34,6 +34,7 @@ public class ChargePointServiceImpl implements ChargePointService{
     public ChargePoint findOne(Long id) {
         ChargePoint chargePoint = chargePointRepository.findById(id).get();
         return chargePoint;
+
     }
 
     //전체조회
