@@ -5,9 +5,6 @@ import com.wonstore.dto.apiDto.member.*;
 import com.wonstore.entity.Address;
 import com.wonstore.entity.Member;
 import com.wonstore.entity.Review;
-import com.wonstore.exception.ChangePasswordException;
-import com.wonstore.exception.DuplicateEmailException;
-import com.wonstore.exception.DuplicateIdException;
 import com.wonstore.service.MemberServiceImpl;
 import com.wonstore.service.ReviewServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -25,78 +22,52 @@ import java.util.stream.Collectors;
 public class MemberApiController {
 
     private final MemberServiceImpl memberService;
-    private final ReviewServiceImpl reviewService;
+    //private final ReviewServiceImpl reviewService;
 
-    @PostMapping("/api/members/new") //회원가입 - user
-    public ResponseEntity<CreateMemberResponse> saveMember(@RequestBody CreateMemberRequest request)
-            throws DuplicateIdException, DuplicateEmailException {
-
-        Long id = memberService.join(request.getUserId(), request.getEmail(), request.getUsername(), request.getPassword(), request.getPhoneNumber(), request.getAddress());
-
+    //회원가입
+    @PostMapping("/api/members/new")
+    public ResponseEntity<CreateMemberResponse> saveMember(@RequestBody CreateMemberRequest request) {
+        Long id = memberService.join(request);
         return ResponseEntity.created(URI.create("/api/members/" + id)).body(new CreateMemberResponse(id));
 
     }
 
-    @PutMapping("/api/members/{memberId}") //회원 정보 수정 -> 이름, 주소, 연락처 만 수정가능 - user
+    //회원 정보 수정 -> 이름, 주소, 연락처 수정가능
+    @PutMapping("/api/members/{memberId}")
     public UpdateMemberResponse updateMember(@PathVariable("memberId") Long memberId,
                                              @RequestBody UpdateMemberRequest request) {
-
-        memberService.updateMember(memberId, request.getUsername(), request.getPhoneNumber(), new Address(request.getAddress()));
-
+        memberService.updateMember(request, memberId);
         return new UpdateMemberResponse(memberId);
     }
 
+    //비밀번호 변경
     @PutMapping("/api/members/{memberId}/password")
     public UpdateMemberResponse updateMemberPassword(@PathVariable("memberId") Long memberId,
-                                                     @RequestBody UpdateMemberPassword request) throws ChangePasswordException {
-        memberService.changePassword(memberId, request.getCurrentPassword(), request.getChangePassword(), request.getVerifyPassword());
-
+                                                     @RequestBody UpdateMemberPassword request) {
+        memberService.changePassword(memberId, request);
         return new UpdateMemberResponse(memberId);
     }
 
-    @GetMapping("/api/members") //전체 회원 조회 - Admin
-    public Result members() {
-        List<Member> findMembers = memberService.findMembers();
-        List<MemberListDto> collect = findMembers.stream()
-                .map(m -> new MemberListDto(m.getUserId()))
-                .collect(Collectors.toList());
-
-        return new Result(collect);
+    //전체 조회
+    @GetMapping("/api/members")
+    public List<MemberListDto> findMembers() {
+        return memberService.findMembers();
     }
 
-    //단건 조회 - Admin
+    //단건 조회
     @GetMapping("/api/members/{memberId}")
     public MemberDto member(@PathVariable("memberId") Long memberId) {
-        Member findMember = memberService.findOne(memberId);
-        MemberDto member = new MemberDto(findMember.getUserId(),
-                findMember.getEmail(),
-                findMember.getUsername(),
-                findMember.getPassword(),
-                findMember.getPhoneNumber(),
-                findMember.getAddress(),
-                findMember.getCurrentPoint());
-        return member;
+        MemberDto response = memberService.findOne(memberId);
+        return response;
+
     }
 
-    @GetMapping("/api/members/review/{memberId}") //회원 리뷰 조회 -> 이건 안쓸 확률이 높음(리뷰에서 조회)
-    public Result memberReviews(@PathVariable("memberId") Long memberId) {
-        Member member = memberService.findOne(memberId);
-        List<Review> reviews = member.getReviews();
-        List<MemberReview> collect = reviews.stream()
-                .map(r -> new MemberReview(r.getItem().getId(), r.getTitle(), r.getContent()))
-                .collect(Collectors.toList());
-
-        return new Result(collect);
-    }
-
-
-    @DeleteMapping("/api/members/{memberId}") //회원 탈퇴 - User
+    //회원 탈퇴
+    @DeleteMapping("/api/members/{memberId}")
     public ResponseEntity<Map<String, String>> deleteMember(@PathVariable("memberId") Long memberId) {
         memberService.deleteMember(memberId);
-
         Map<String, String> response = new HashMap<>();
         response.put("message", "회원탈퇴처리되었습니다.");
-
         return ResponseEntity.ok(response);
     }
 

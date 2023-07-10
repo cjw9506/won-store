@@ -9,7 +9,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Member {
@@ -17,8 +16,6 @@ public class Member {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id;
-
-    private String userId; //회원 아이디
 
     private String email; //회원 이메일
 
@@ -34,7 +31,6 @@ public class Member {
     @Embedded
     private Address address; //회원 주소
 
-    @Builder.Default
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
 
@@ -92,16 +88,13 @@ public class Member {
         review.setMember(this);
     }
 
-    // 생성메서드
-    public static Member createMember(String userId, String email, String username, String password, String phoneNumber, String address) {
-        Member member = Member.builder()
-                .userId(userId)
-                .email(email)
-                .username(username)
-                .password(password)
-                .phoneNumber(phoneNumber)
-                .address(new Address(address))
-                .build();
-        return member;
+    @Builder //생성 메서드
+    public Member(String email, String username, String password, String phoneNumber, String address) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.address = new Address(address);
     }
+
 }
