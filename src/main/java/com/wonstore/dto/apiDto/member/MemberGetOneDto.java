@@ -5,7 +5,7 @@ import com.wonstore.entity.Address;
 import lombok.*;
 
 @Getter
-public class MemberDto {
+public class MemberGetOneDto {
 
     private String email;
     private String username;
@@ -14,7 +14,7 @@ public class MemberDto {
     private int currentPoint;
 
     @Builder
-    public MemberDto(String email, String username, String phoneNumber, Address address, int currentPoint) {
+    public MemberGetOneDto(String email, String username, String phoneNumber, Address address, int currentPoint) {
         this.email = email;
         this.username = username;
         this.phoneNumber = phoneNumber;

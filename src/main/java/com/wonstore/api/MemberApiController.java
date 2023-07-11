@@ -1,12 +1,7 @@
 package com.wonstore.api;
 
-import com.wonstore.dto.apiDto.*;
 import com.wonstore.dto.apiDto.member.*;
-import com.wonstore.entity.Address;
-import com.wonstore.entity.Member;
-import com.wonstore.entity.Review;
-import com.wonstore.service.MemberServiceImpl;
-import com.wonstore.service.ReviewServiceImpl;
+import com.wonstore.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,13 +10,12 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
 public class MemberApiController {
 
-    private final MemberServiceImpl memberService;
+    private final MemberService memberService;
     //private final ReviewServiceImpl reviewService;
 
     //회원가입
@@ -56,8 +50,8 @@ public class MemberApiController {
 
     //단건 조회
     @GetMapping("/api/members/{memberId}")
-    public MemberDto member(@PathVariable("memberId") Long memberId) {
-        MemberDto response = memberService.findOne(memberId);
+    public MemberGetOneDto member(@PathVariable("memberId") Long memberId) {
+        MemberGetOneDto response = memberService.findOne(memberId);
         return response;
 
     }

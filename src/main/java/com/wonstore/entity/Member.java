@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +35,7 @@ public class Member {
     private List<Order> orders = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ChargePoint> point = new ArrayList<>();
+    private List<Point> point = new ArrayList<>();
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
@@ -47,15 +47,15 @@ public class Member {
     }
 
     //연관관계 메서드 - chargePoint <-> member
-    public void addChargePoint(ChargePoint chargePoint) {
-        this.getPoint().add(chargePoint); //멤버의 point 리스트에 chargePoint 값 추가
-        chargePoint.updateMember(this); //chargePoint 에 변경된 멤버값을 세팅
+    public void addChargePoint(Point point) {
+        this.getPoint().add(point); //멤버의 point 리스트에 chargePoint 값 추가
+        point.updateMember(this); //chargePoint 에 변경된 멤버값을 세팅
         calculateCurrentPoint(); //멤버의 현재포인트를 업데이트
     }
 
     private void calculateCurrentPoint() {
         int totalPoint = 0;
-        for (ChargePoint p : point) {
+        for (Point p : point) {
             totalPoint += p.getAmount();
         }
         this.updateCurrentPoint(totalPoint);
