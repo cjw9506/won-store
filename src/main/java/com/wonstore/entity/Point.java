@@ -6,14 +6,12 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Getter
-@Table(name = "charge_point")
-public class ChargePoint {
+public class Point {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "point_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -28,6 +26,9 @@ public class ChargePoint {
         this.member = member;
     }
 
-
-
+    @Builder
+    public Point(int amount) {
+        this.amount = amount;
+        this.chargeDate = LocalDateTime.now();
+    }
 }

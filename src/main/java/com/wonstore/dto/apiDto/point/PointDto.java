@@ -1,4 +1,4 @@
-package com.wonstore.dto.apiDto.charge;
+package com.wonstore.dto.apiDto.point;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChargeDto {
+public class PointDto {
 
     private Long id;
     private Long memberId;
