@@ -1,14 +1,17 @@
 package com.wonstore.dto.apiDto.login;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor
 public class LoginRequest {
 
-    private String id;
-    private String password ;
+    private String email;
+    private String password;
+
+    @Builder
+    public LoginRequest(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 }
