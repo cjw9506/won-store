@@ -1,5 +1,6 @@
 package com.wonstore.api;
 
+import com.wonstore.config.data.MemberSession;
 import com.wonstore.dto.apiDto.Result;
 import com.wonstore.dto.apiDto.point.PointDto;
 import com.wonstore.dto.apiDto.point.PointRequest;
@@ -24,20 +25,21 @@ public class PointApiController { //충전내역 조회 추가할 것
     private final PointService pointService;
 
     @PostMapping("/api/charge")
-    public Long charge(@RequestBody PointRequest request) {
+    public Long charge(@RequestBody PointRequest request, MemberSession session) {
 
-        Long pointId = pointService.charge(request);
+        Long pointId = pointService.charge(request, session);
 
         return pointId;
     }
 
     @GetMapping("/api/charge")
-    public List<PointResponse> getPoints() {
+    public List<PointResponse> getPoints(MemberSession session) {
         return pointService.getList();
     }
 
     @GetMapping("/api/charge/{pointId}")
-    public PointResponse getPoint(@PathVariable Long pointId) {
+    public PointResponse getPoint(@PathVariable Long pointId,
+                                  MemberSession session) {
         return pointService.findOne(pointId);
     }
 

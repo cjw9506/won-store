@@ -78,6 +78,7 @@ public class MemberService {
     }
 
     // 전체 조회
+
     public List<MemberListDto> findMembers() {
 
         return memberRepository.findAll().stream()

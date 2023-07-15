@@ -1,8 +1,8 @@
 package com.wonstore.service;
 
+import com.wonstore.config.data.MemberSession;
 import com.wonstore.dto.apiDto.point.PointRequest;
 import com.wonstore.dto.apiDto.point.PointResponse;
-import com.wonstore.entity.Item;
 import com.wonstore.entity.Member;
 import com.wonstore.entity.Point;
 import com.wonstore.exception.IdNotFound;
@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,11 +27,9 @@ public class PointService {
     private final MemberRepository memberRepository;
 
     @Transactional //충전
-    public Long charge(PointRequest request) {
+    public Long charge(PointRequest request, MemberSession session) {
 
-        Member member = memberRepository.findById(request.getMemberId()).orElseThrow(() -> {
-            throw new IdNotFound();
-        });
+        Member member = memberRepository.findById(session.id).orElseThrow(IdNotFound::new);
 
         Point point = Point.builder()
                 .amount(request.getPoint())
