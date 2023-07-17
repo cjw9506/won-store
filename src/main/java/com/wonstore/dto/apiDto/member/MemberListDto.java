@@ -11,11 +11,11 @@ public class MemberListDto {
     private String email;
     private String username;
     private String phoneNumber;
-    private Address address;
+    private String address;
     private int currentPoint;
 
     @Builder
-    public MemberListDto(String email, String username, String phoneNumber, Address address, int currentPoint) {
+    public MemberListDto(String email, String username, String phoneNumber, String address, int currentPoint) {
         this.email = email;
         this.username = username;
         this.phoneNumber = phoneNumber;

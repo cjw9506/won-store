@@ -10,11 +10,11 @@ public class MemberGetOneDto {
     private String email;
     private String username;
     private String phoneNumber;
-    private Address address;
+    private String address;
     private int currentPoint;
 
     @Builder
-    public MemberGetOneDto(String email, String username, String phoneNumber, Address address, int currentPoint) {
+    public MemberGetOneDto(String email, String username, String phoneNumber, String address, int currentPoint) {
         this.email = email;
         this.username = username;
         this.phoneNumber = phoneNumber;

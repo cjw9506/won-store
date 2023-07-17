@@ -1,16 +1,19 @@
 package com.wonstore.dto.apiDto.member;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Getter @Setter
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor
 public class UpdateMemberRequest {
 
     private String username;
     private String phoneNumber;
     private String address;
+
+    @Builder
+    public UpdateMemberRequest(String username, String phoneNumber, String address) {
+        this.username = username;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+    }
 }
