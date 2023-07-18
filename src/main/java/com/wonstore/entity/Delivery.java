@@ -1,15 +1,12 @@
 package com.wonstore.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 public class Delivery {
 
@@ -17,16 +14,21 @@ public class Delivery {
     @Column(name = "delivery_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "delivery")
+    @OneToOne(mappedBy = "delivery", fetch = FetchType.LAZY)
     private Order order;
 
-    @Embedded
-    private Address address;
+    private String address;
 
     @Enumerated(EnumType.STRING)
     private DeliveryStatus status;
 
-    public void createDelivery(Order order) {
+    @Builder
+    public Delivery(String address, DeliveryStatus status) {
+        this.address = address;
+        this.status = status;
+    }
+
+    public void setOrder(Order order) {
         this.order = order;
     }
 }
