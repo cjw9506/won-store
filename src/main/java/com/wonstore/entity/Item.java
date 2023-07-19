@@ -1,22 +1,11 @@
 package com.wonstore.entity;
 
-import com.wonstore.exception.NotEnoughException;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-@Builder
 @Entity
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@Table(name = "item")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Item {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,60 +14,38 @@ public class Item {
 
     private String itemName;
 
-    private int itemPrice;
-
-    private int itemQuantity;
-
     private String itemDetail;
 
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
-    private List<CategoryItem> categoryItems = new ArrayList<>();
+    private int price;
 
-    @OneToMany(mappedBy = "item")
-    private List<OrderItem> orderItems = new ArrayList<>();
+    private int stockQuantity;
 
-    private Long memberId;
-
-    @OneToMany(mappedBy = "item")
-    private List<Review> reviews = new ArrayList<>();
-
-    public static Item createItem(String itemName, int price, int quantity, String itemDetail, Long memberId, CategoryItem... categoryItems) {
-        Item item = Item.builder()
-                .itemName(itemName)
-                .itemPrice(price)
-                .itemQuantity(quantity)
-                .itemDetail(itemDetail)
-                .categoryItems(new ArrayList<>())
-                .memberId(memberId)
-                .build();
-        for (CategoryItem categoryItem : categoryItems) {
-            item.addCategoryItem(categoryItem);
-        }
-        return item;
-    }
-
-    public void addCategoryItem(CategoryItem categoryItem) {
-        categoryItems.add(categoryItem);
-        categoryItem.createItem(this);
-    }
-
-    public void update(String itemName, int itemPrice, int itemQuantity, String itemDetail) {
+    @Builder
+    public Item(String itemName, String itemDetail, int price, int stockQuantity) {
         this.itemName = itemName;
-        this.itemPrice = itemPrice;
-        this.itemQuantity = itemQuantity;
         this.itemDetail = itemDetail;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
     }
 
-    public void addStock(int quantity) {
-        this.itemQuantity += quantity;
+    public void changeItem(String itemName, String itemDetail, int price, int stockQuantity) {
+        this.itemName = itemName;
+        this.itemDetail = itemDetail;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+
+    }
+
+    public void addStock(int count) {
+        this.stockQuantity += count;
     }
 
     public void removeStock(int quantity) {
-        int restStock = this.itemQuantity - quantity;
+        int restStock = this.stockQuantity - quantity;
         if (restStock < 0) {
-            throw new IllegalStateException("수량이 없습니다.");
+            throw new IllegalArgumentException("need more stock");
         }
-        this.itemQuantity = restStock;
+        this.stockQuantity = restStock;
     }
-
 }
+

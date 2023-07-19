@@ -1,19 +1,23 @@
 package com.wonstore.dto.apiDto.item;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter @Setter
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor
 public class ItemRequest {
 
     private String itemName;
-    private int itemPrice;
-    private int itemQuantity;
     private String itemDetail;
-    private Long memberId;
-    private Long categoryId;
+    private int price;
+    private int stockQuantity;
+
+    @Builder
+    public ItemRequest(String itemName, String itemDetail, int price, int stockQuantity) {
+        this.itemName = itemName;
+        this.itemDetail = itemDetail;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+    }
 }
