@@ -96,7 +96,7 @@ public class MemberService {
     @Transactional //회원 수정
     public Long updateMember(UpdateMemberRequest request, Long memberId) {
         Member findMember = memberRepository.findById(memberId).get();
-        findMember.updateInfo(request.getUsername(), request.getPhoneNumber(), new Address());
+        findMember.updateInfo(request.getUsername(), request.getPhoneNumber(), request.getAddress());
 
         return findMember.getId();
     }

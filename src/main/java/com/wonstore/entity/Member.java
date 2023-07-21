@@ -25,11 +25,12 @@ public class Member {
 
     private String phoneNumber; //폰 번호
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "member")
-    private Cart cart;
+//    @OneToOne(fetch = FetchType.LAZY, mappedBy = "member")
+//    private Cart cart;
 
-    @Embedded
-    private Address address; //회원 주소
+//    @Embedded
+//    private Address address; //회원 주소
+    private String address;
 
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
@@ -37,8 +38,11 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Point> point = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<Review> reviews = new ArrayList<>();
+//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+//    private List<Review> reviews = new ArrayList<>();
+
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private AuthToken authToken;
 
     private int currentPoint;
 
@@ -52,6 +56,7 @@ public class Member {
         point.updateMember(this); //chargePoint 에 변경된 멤버값을 세팅
         calculateCurrentPoint(); //멤버의 현재포인트를 업데이트
     }
+
 
     private void calculateCurrentPoint() {
         int totalPoint = 0;
@@ -68,7 +73,7 @@ public class Member {
     }
 
     //회원 정보 수정
-    public void updateInfo(String username, String phoneNumber, Address address) {
+    public void updateInfo(String username, String phoneNumber, String address) {
         this.username = username;
         this.phoneNumber = phoneNumber;
         this.address = address;
@@ -83,10 +88,12 @@ public class Member {
         this.currentPoint += point;
     }
 
-    public void addReview(Review review) {
-        this.reviews.add(review);
-        review.setMember(this);
-    }
+//    public void addReview(Review review) {
+//        this.reviews.add(review);
+//        review.setMember(this);
+//    }
+
+
 
     @Builder //생성 메서드
     public Member(String email, String username, String password, String phoneNumber, String address) {
@@ -94,7 +101,7 @@ public class Member {
         this.username = username;
         this.password = password;
         this.phoneNumber = phoneNumber;
-        this.address = new Address(address);
+        this.address = address;
     }
 
 }
