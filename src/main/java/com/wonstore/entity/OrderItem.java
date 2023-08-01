@@ -1,17 +1,14 @@
 package com.wonstore.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
-@Table(name = "order_item")
 @Entity
+@Table(name = "order_item")
+@Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class OrderItem {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,40 +16,32 @@ public class OrderItem {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")
-    private Order order;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
 
-    private int orderPrice;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Order order;
 
-    //주문수량
+    private int price;
     private int count;
 
-
-    public static OrderItem createOrderItem(Item item, int orderPrice, int count) {
-        OrderItem orderItem = OrderItem.builder()
-                .item(item)
-                .orderPrice(orderPrice)
-                .count(count)
-                .build();
-
-        item.removeStock(count);
-        return orderItem;
-
+    @Builder
+    public OrderItem(Item item, int price, int count) {
+        this.item = item;
+        this.price = price;
+        this.count = count;
     }
 
-    public void cancel() {
-        getItem().addStock(count);
-    }
-
-    public void createOrder(Order order) {
+    public void setOrder(Order order) {
         this.order = order;
     }
 
     public int getTotalPrice() {
-        return getOrderPrice() * getCount();
+        return getPrice() * getCount();
+    }
+
+    public void cancel() {
+        getItem().addStock(count);
     }
 }

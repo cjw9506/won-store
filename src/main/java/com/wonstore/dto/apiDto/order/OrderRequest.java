@@ -1,13 +1,19 @@
 package com.wonstore.dto.apiDto.order;
 
-import com.wonstore.entity.Address;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
-@Getter @Setter
+@NoArgsConstructor
+@Getter
 public class OrderRequest {
 
-    private Long memberId;
     private Long itemId;
-    private int count;
+    private int itemCount;
+
+    @Builder
+    public OrderRequest(Long itemId, int itemCount) {
+        this.itemId = itemId;
+        this.itemCount = itemCount;
+    }
 }
